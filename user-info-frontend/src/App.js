@@ -13,7 +13,7 @@ function App() {
     e.preventDefault();
     try {
       // Make POST request to save user data
-      const res = await axios.post("https://testb2-d5rt.onrender.com/add-user", {
+      const res = await axios.post("https://testb2-1.onrender.com/add-user", {
         name,
         userId,
       });
@@ -30,7 +30,7 @@ function App() {
   const handleFetch = async () => {
     try {
       // Make GET request to fetch user data by ID
-      const res = await axios.get(`https://testb2-d5rt.onrender.com/${inputId}`);
+      const res = await axios.get(`https://testb2-1.onrender.com/${inputId}`);
       setFetchedName(res.data.name);
     } catch (err) {
       setFetchedName("User not found");
