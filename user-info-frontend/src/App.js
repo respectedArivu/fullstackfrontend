@@ -12,7 +12,6 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Make POST request to save user data
       const res = await axios.post("https://testb2-1.onrender.com/add-user", {
         name,
         userId,
@@ -29,13 +28,39 @@ function App() {
   // Handle fetching a user by ID
   const handleFetch = async () => {
     try {
-      // Make GET request to fetch user data by ID
-      const res = await axios.get(`https://testb2-1.onrender.com/${inputId}`);
+      const res = await axios.get(`https://testb2-1.onrender.com/get-user/${inputId}`);
       setFetchedName(res.data.name);
     } catch (err) {
       setFetchedName("User not found");
     }
   };
+
+  // Google Sign-In success handler
+  const handleGoogleLogin = async (response) => {
+    const token = response.credential;
+    try {
+      const res = await axios.post("https://testb2-1.onrender.com/google-auth", { token });
+      alert(`Welcome ${res.data.name}`);
+    } catch (err) {
+      console.error(err);
+      alert("Google Authentication failed");
+    }
+  };
+
+  // Initialize Google Sign-In button
+  React.useEffect(() => {
+    /* global google */
+    if (window.google) {
+      google.accounts.id.initialize({
+        client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual client ID
+        callback: handleGoogleLogin,
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("googleSignInDiv"),
+        { theme: "outline", size: "large" }
+      );
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -72,6 +97,11 @@ function App() {
         />
         <button onClick={handleFetch}>Fetch User</button>
         {fetchedName && <p>Name: {fetchedName}</p>}
+      </div>
+
+      <div>
+        <h3>Or Login/Register with Google</h3>
+        <div id="googleSignInDiv"></div>
       </div>
     </div>
   );
